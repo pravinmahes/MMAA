@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Print Form</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      padding: 20px;
+      margin: 0;
+      background: #E9F0F7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form-container {
+      background: white;
+      border-radius: 15px;
+      padding: 20px 25px;
+      max-width: 300px;
+      width: 100%;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    h3 {
+      margin-bottom: 15px;
+      color: #1A73E8;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .form-section {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+    label {
+      font-size: 14px;
+      font-weight: 500;
+      margin-right: 5px;
+      color: #333;
+    }
+    select, input[type="text"] {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      background-color: #F9F9F9;
+      color: #333;
+      width: 100%;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 14px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #1A73E8, #155bb5);
+      color: white;
+      cursor: pointer;
+      font-weight: 500;
+      width: 100%;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: linear-gradient(135deg, #155BB5, #0f3e99);
+    }
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      margin-right: 5px;
+    }
+    .print-value {
+      display: inline-block;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    /* Print styling */
+    @media print {
+      @page {
+        size: 4in 3in;
+        margin: 0;
+      }
+      body {
+        padding: 5px;
+        background: white;
+        color: black;
+      }
+      .form-container {
+        box-shadow: none;
+        border-radius: 0;
+        padding: 5px;
+      }
+      h3 {
+        color: black;
+        font-size: 16px;
+      }
+      button, select, input[type="text"], input[type="checkbox"] {
+        display: none !important;
+      }
+      .print-value {
+        display: inline;
+        font-weight: bold;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body onload="setDateTime()">
+  <div class="form-container">
+    <h3>Print Form</h3>
+    <!-- Date & Time -->
+    <div class="form-section">
+      <label>Date & Time:</label>
+      <span id="datetime" class="print-value"></span>
+    </div>
+    <!-- Zone -->
+    <div class="form-section">
+      <label>Zone:</label>
+      <select id="zone" onchange="updatePrintValue('zoneValue', this.value)">
+        <option value="Zone 1">Zone 1</option>
+        <option value="Zone 2">Zone 2</option>
+        <option value="Zone 3">Zone 3</option>
+        <option value="Zone 4">Zone 4</option>
+      </select>
+      <span id="zoneValue" class="print-value" style="color: #1A73E8;"></span>
+    </div>
+    <!-- VRID -->
+    <div class="form-section">
+      <label>VRID:</label>
+      <input type="text" id="vrid" placeholder="Enter VRID" oninput="updatePrintValue('vridValue', this.value)">
+      <span id="vridValue" class="print-value" style="color: #D93025;"></span>
+    </div>
+    <!-- Checkboxes -->
+    <div class="form-section">
+      <label>
+        <input type="checkbox" id="retina" onchange="toggleCheckbox('retinaValue', this)">
+        Retina
+      </label>
+      <span id="retinaValue" class="print-value"></span>
+      <br>
+      <label>
+        <input type="checkbox" id="ageing" onchange="toggleCheckbox('ageingValue', this)">
+        Ageing
+      </label>
+      <span id="ageingValue" class="print-value"></span>
+    </div>
+    <!-- Print Button -->
+    <button onclick="refreshAndPrint()">Print</button>
+  </div>
+  <script>
+    function setDateTime() {
+      const now = new Date();
+      document.getElementById("datetime").textContent = now.toLocaleString();
+      document.getElementById("zoneValue").textContent = document.getElementById("zone").value;
+    }
+    function updatePrintValue(spanId, value) {
+      document.getElementById(spanId).textContent = value;
+    }
+    function toggleCheckbox(spanId, checkbox) {
+      document.getElementById(spanId).textContent = checkbox.checked ? "✔️" : "";
+    }
+    function refreshAndPrint() {
+      setDateTime();
+      toggleCheckbox('retinaValue', document.getElementById('retina'));
+      toggleCheckbox('ageingValue', document.getElementById('ageing'));
+      window.print();
+    }
+  </script>
+</body>
+</html>
